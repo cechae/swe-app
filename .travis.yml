@@ -1,20 +1,24 @@
 language: python
 python:
-  - "3.9"
-services:
-  - postgresql
-addons:
-  postgresql: "12"
-env:
-  global:
-    - DJANGO_SETTINGS_MODULE="config.settings.travis"
-    - SECRET_KEY="travis_secret_key"
-    - DEBUG=True
-    - ALLOWED_HOSTS=localhost
+  - "3.7"
 install:
   - pip install -r requirements.txt
-before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - python manage.py migrate
+  - pip install black
+  - pip install flake8
+  - pip install coveralls
 script:
-  - python manage.py test
+  - python -m black . --check
+  - python -m flake8 --max-line-length=91
+  - python -m coverage run --source='.' manage.py test
+after_script:
+  - coveralls
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $AWS_SECRET_KEY
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  region: us-west-2
+  app: "mysite_new"
+  env: "mysite-new"
+  bucket_name: "elasticbeanstalk-us-west-2-898797307161"
+  on:
+    branch: main
