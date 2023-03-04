@@ -23,7 +23,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("question_text", models.CharField(max_length=200)),
-                ("pub_date", models.DateTimeField(verbose_name="date published")),
+                ("pub_date", models.DateTimeField(
+                    verbose_name="date published")),
             ],
         ),
         migrations.CreateModel(
@@ -43,7 +44,8 @@ class Migration(migrations.Migration):
                 (
                     "question",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="polls.question"
+                        on_delete=django.db.models.deletion.CASCADE, 
+                        to="polls.question"
                     ),
                 ),
             ],
